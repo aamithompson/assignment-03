@@ -1,0 +1,162 @@
+/* ----------------------------------------------------------------------------
+* Copyright &copy; 2016 Aaron Thompson <aamithompson@csu.fulerton.edu>
+* Released under the [MIT License] (http://opensource.org/licenses/MIT)
+* ------------------------------------------------------------------------- */
+
+#include <iostream>
+#include <string>
+#include <cmath>
+
+using std::cin;
+using std::cout;
+using std::endl;
+using std::string;
+
+//[Part 4 - Recursion]
+int EuclidGCD_Recursive(const int, const int);
+int FibonacciSequenceNthTerm_Recursive(const int);
+int PowerFunction_Recursive(const int, const int);
+float PowerFunction_Recursive(const float, const int);
+int TriangleNumber_Recursive(const int);
+
+//[Part 5 - Iterative]
+int EuclidGCD_iter(int, int);
+int FibonacciSequenceNthTerm_iter(int);
+int PowerFunction_iter(int, int);
+float PowerFunction_iter(const float, const int);
+int TriangleNumber_iter(const int);
+
+int main(){
+	char c;
+	cout << "----------------------------------------\n";
+	cout << "RECURSIVE EXAMPLES\n";
+	cout << "----------------------------------------\n";
+
+	cout << "1) Euclid's GCD Algorithm\n";
+	cout << EuclidGCD_Recursive(60, 24) << endl;
+
+	cout << "\n2) Fibonacci Sequence Terms\n";
+	for (int n = 0; n < 32; n++)
+		cout << "Term " << n << ": " << FibonacciSequenceNthTerm_Recursive(n) << endl;
+
+	cout << "\n\n3) Power Function\n";
+	for (int n = 0; n < 16; n++)
+		cout << "2 to the " << n << "th power: " << PowerFunction_Recursive(2, n) << endl;
+
+	cout << "\n4) Triangle Number Sums\n";
+	for (int n = 0; n < 32; n++)
+		cout << "Term " << n << ": " << TriangleNumber_Recursive(n) << endl;
+	
+
+	cout << "----------------------------------------\n";
+	cout << "ITERATIVE EXAMPLES\n";
+	cout << "----------------------------------------\n";
+
+	cout << "1) Euclid's GCD Algorithm\n";
+	cout << EuclidGCD_iter(60, 24) << endl;
+
+	cout << "\n2) Fibonacci Sequence Terms\n";
+	for (int n = 0; n < 32; n++)
+		cout << "Term " << n << ": " << FibonacciSequenceNthTerm_iter(n) << endl;
+
+	cout << "\n\n3) Power Function\n";
+	for (int n = 0; n < 16; n++)
+		cout << "2 to the " << n << "th power: " << PowerFunction_iter(2, n) << endl;
+
+	cout << "\n4) Triangle Number Sums\n";
+	for (int n = 0; n < 32; n++)
+		cout << "Term " << n << ": " << TriangleNumber_iter(n) << endl;
+
+	cin >> c;
+}
+
+//[Part 4 - Recursion]
+int EuclidGCD_Recursive(const int base, const int divisor){
+	if (base%divisor != 0)
+		return EuclidGCD_Recursive(std::abs(divisor), std::abs(base) % std::abs(divisor));
+	else
+		return std::abs(divisor);
+}
+
+int FibonacciSequenceNthTerm_Recursive(const int n){
+	if (n < 1)
+		return 1;
+	else
+		return FibonacciSequenceNthTerm_Recursive(n - 1) + FibonacciSequenceNthTerm_Recursive(n - 2);
+}
+
+int PowerFunction_Recursive(int base, int power){
+	if (power == 0)
+		return 1;
+	else
+		return base * PowerFunction_Recursive(base, power - 1);
+}
+
+float PowerFunction_Recursive(float base, int power){
+	if (power == 0)
+		return 1;
+	else
+		return base * PowerFunction_Recursive(base, power - 1);
+}
+
+int TriangleNumber_Recursive(int n){
+	if (n == 0)
+		return 0;
+	else
+		return n + TriangleNumber_Recursive(n - 1);
+}
+
+//[Part 5 - Iterative]
+int EuclidGCD_iter(int base, int divisor){
+	for (divisor = std::abs(divisor);;divisor = std::abs(base) % divisor)
+		if (std::abs(base) % divisor == 0)
+			break;
+		base = divisor;
+
+	return divisor;
+}
+
+int FibonacciSequenceNthTerm_iter(int n){
+	int sum = 1;
+	int negativeOne = 1;
+	int negativeTwo = 0;
+
+	for (int i = 0; i < n; i++){
+		sum += negativeOne + negativeTwo;
+		negativeTwo = negativeOne;
+		negativeOne = sum;
+	}
+	if (n < 1)
+		return 1;
+	else
+		return FibonacciSequenceNthTerm_Recursive(n - 1) + FibonacciSequenceNthTerm_Recursive(n - 2);
+}
+
+int PowerFunction_iter(int base, int power){
+	int baseTemp = base;
+
+	if (power == 0)
+		return 1;
+	for (; power > 1; power--)
+		baseTemp *= base;
+
+	return baseTemp;
+}
+
+float PowerFunction_iter(float base, int power){
+	float baseTemp = base;
+
+	if (power == 0)
+		return 1;
+	for (; power > 1; power--)
+		baseTemp *= base;
+
+	return baseTemp;
+}
+
+int TriangleNumber_iter(int n){
+	int sum = 0;
+	for (; n > 0; n--)
+		sum += n;
+	return sum;
+}
