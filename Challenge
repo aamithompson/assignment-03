@@ -1,0 +1,105 @@
+/* ----------------------------------------------------------------------------
+* Copyright &copy; 2016 Aaron Thompson <aamithompson@csu.fulerton.edu>
+* Released under the [MIT License] (http://opensource.org/licenses/MIT)
+* ------------------------------------------------------------------------- */
+
+#include <iostream>
+#include <string>
+#include <cmath>
+
+using std::cin;
+using std::cout;
+using std::endl;
+using std::string;
+
+const string roman_numerals[] = { "I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M" };
+const int roman_numerals_conversion[] = { 1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000 };
+const int roman_numerals_length = 12;
+
+const string english_number[] = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eightteen", "nineteen", "twenty", "thirty", "fourty", "fifty", "sixty", "seventy", "eighty", "ninety", "hundred", "thousand", "million" };
+const int english_number_conversion[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 30, 40, 50, 60, 70, 80, 90, 100, 1000, 1000000 };
+const int english_number_length = 30;
+const int english_number_special_ten = 20;
+const int english_number_special_hundred = 28;
+const int english_number_special_thousand = 29;
+const int english_number_special_million = 30;
+
+string int_to_roman_numerals(const int);
+string int_to_words(const int);
+string magic_number(int n);
+
+int main(){
+	char c;
+	cout << "----------------------------------------\n";
+	cout << "CHALLENGE\n";
+	cout << "----------------------------------------\n";
+	cout << "1) Roman Numeral Conversion\n";
+	cout << int_to_roman_numerals(1997) << " (1997)\n";
+	cout << int_to_roman_numerals(2016) << " (2016)\n\n";
+
+	cout << "2) English Word Conversion \n";
+	cout << int_to_words(1997) << " (1997)\n";
+	cout << int_to_words(2016) << " (2016)\n";
+	cout << 0 << " == " << int_to_words(0) << endl;
+	cout << 1 << " == " << int_to_words(1) << endl;
+	cout << -1 << " == " << int_to_words(-1) << endl;
+	cout << 123 << " == " << int_to_words(123) << endl;
+	cout << 123123 << " == " << int_to_words(123123) << endl;
+	cout << 123000123 << " == " << int_to_words(123000123) << endl;
+	cout << 123123000 << " == " << int_to_words(123123000) << endl << endl;
+
+	cout << "3) 4 the Fantastic Number \n";
+	cout << magic_number(1) << endl << endl;
+	cout << magic_number(7) << endl << endl;
+	cout << magic_number(13) << endl << endl;
+
+	cin >> c;
+}
+
+
+
+string int_to_roman_numerals(const int number){
+	for (int i = roman_numerals_length; i >= 0; i--)
+		if (number/roman_numerals_conversion[i] != 0)
+			return roman_numerals[i] + int_to_roman_numerals(number - roman_numerals_conversion[i]);
+
+	return "";
+}
+
+string int_to_words(const int number){
+	if (number == 0){
+		return english_number[0];
+	}
+
+	if (number < 0){
+		return "negative " + int_to_words(std::abs(number));
+	}
+
+	for (int i = english_number_length; i > 0; i--)
+		if (number / english_number_conversion[i] != 0){
+			if (i >= english_number_special_hundred)
+				if (number - (number / (int)english_number_conversion[i])*english_number_conversion[i] != 0)
+					return int_to_words(number / english_number_conversion[i]) + "-" + english_number[i] + " " + int_to_words(number - (number / (int)english_number_conversion[i])*english_number_conversion[i]);
+				else
+					return int_to_words(number / english_number_conversion[i]) + "-" + english_number[i];
+			else
+				if (number - english_number_conversion[i] != 0)
+					return english_number[i] + " " + int_to_words(number - english_number_conversion[i]);
+				else
+					return english_number[i];
+		}
+			
+
+	return "";
+}
+
+string magic_number(const int number){
+	if (int_to_words(number).length() == number){
+		return std::to_string(number) + " is the magic number!";
+	}
+	else{
+		return std::to_string(number) + " is " + std::to_string(int_to_words(number).length()) + '\n' + magic_number(int_to_words(number).length());
+	}
+
+	return "";
+}
